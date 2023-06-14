@@ -5,7 +5,6 @@ package outboundgroup
 import (
 	"fmt"
 	"net"
-	"time"
 
 	C "clash-foss/constant"
 )
@@ -42,9 +41,9 @@ func addrToMetadata(rawAddress string) (addr *C.Metadata, err error) {
 	return
 }
 
-func tcpKeepAlive(c net.Conn) {
-	if tcp, ok := c.(*net.TCPConn); ok {
-		tcp.SetKeepAlive(true)
-		tcp.SetKeepAlivePeriod(30 * time.Second)
-	}
+func tcpKeepAlive(_ net.Conn) {
+	//if tcp, ok := c.(*net.TCPConn); ok {
+	//	tcp.SetKeepAlive(true)
+	//	tcp.SetKeepAlivePeriod(30 * time.Second)
+	//}
 }

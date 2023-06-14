@@ -8,51 +8,54 @@ import (
 
 // Vehicle Type
 const (
-	File VehicleType = iota
-	HTTP
-	Compatible
+	File       VehicleType = "File"
+	HTTP       VehicleType = "HTTP"
+	Compatible VehicleType = "Compatible"
 )
 
 // VehicleType defined
-type VehicleType int
+type VehicleType string
 
 func (v VehicleType) String() string {
-	switch v {
-	case File:
-		return "File"
-	case HTTP:
-		return "HTTP"
-	case Compatible:
-		return "Compatible"
-	default:
-		return "Unknown"
-	}
+	return string(v)
+}
+
+func (v *VehicleType) MarshalBinary() (data []byte, err error) {
+	return []byte(*v), nil
+}
+
+func (v *VehicleType) UnmarshalBinary(data []byte) error {
+	*v = VehicleType(data)
+
+	return nil
 }
 
 type Vehicle interface {
 	Read() ([]byte, error)
-	Path() string
 	Type() VehicleType
 }
 
 // Provider Type
 const (
-	Proxy ProviderType = iota
-	Rule
+	Proxy ProviderType = "Proxy"
+	Rule  ProviderType = "Rule"
 )
 
 // ProviderType defined
-type ProviderType int
+type ProviderType string
 
 func (pt ProviderType) String() string {
-	switch pt {
-	case Proxy:
-		return "Proxy"
-	case Rule:
-		return "Rule"
-	default:
-		return "Unknown"
-	}
+	return string(pt)
+}
+
+func (pt *ProviderType) MarshalBinary() (data []byte, err error) {
+	return []byte(*pt), err
+}
+
+func (pt *ProviderType) UnmarshalBinary(data []byte) error {
+	*pt = ProviderType(data)
+
+	return nil
 }
 
 // Provider interface
@@ -72,6 +75,7 @@ type ProxyProvider interface {
 	// Commonly used in DialContext and DialPacketConn
 	Touch()
 	HealthCheck()
+	HealthCheckElement(name string)
 }
 
 // Rule Type

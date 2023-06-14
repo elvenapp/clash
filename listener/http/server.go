@@ -5,8 +5,9 @@ package http
 import (
 	"net"
 
-	"clash-foss/common/cache"
+	"clash-foss/component/auth"
 	C "clash-foss/constant"
+	authStore "clash-foss/listener/auth"
 )
 
 type Listener struct {
@@ -32,18 +33,13 @@ func (l *Listener) Close() error {
 }
 
 func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
-	return NewWithAuthenticate(addr, in, true)
+	return NewWithAuthenticate(addr, in, authStore.Authenticator())
 }
 
-func NewWithAuthenticate(addr string, in chan<- C.ConnContext, authenticate bool) (*Listener, error) {
+func NewWithAuthenticate(addr string, in chan<- C.ConnContext, authenticator auth.Authenticator) (*Listener, error) {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return nil, err
-	}
-
-	var c *cache.LruCache
-	if authenticate {
-		c = cache.New(cache.WithAge(30))
 	}
 
 	hl := &Listener{
@@ -59,7 +55,7 @@ func NewWithAuthenticate(addr string, in chan<- C.ConnContext, authenticate bool
 				}
 				continue
 			}
-			go HandleConn(conn, in, c)
+			go HandleConn(conn, in, authenticator)
 		}
 	}()
 

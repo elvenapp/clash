@@ -8,6 +8,7 @@ import (
 
 	"clash-foss/adapter/inbound"
 	N "clash-foss/common/net"
+	"clash-foss/component/auth"
 	C "clash-foss/constant"
 	authStore "clash-foss/listener/auth"
 	"clash-foss/transport/socks4"
@@ -37,6 +38,10 @@ func (l *Listener) Close() error {
 }
 
 func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
+	return NewWithAuthenticator(addr, in, authStore.Authenticator())
+}
+
+func NewWithAuthenticator(addr string, in chan<- C.ConnContext, authenticator auth.Authenticator) (*Listener, error) {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return nil, err
@@ -55,15 +60,15 @@ func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
 				}
 				continue
 			}
-			go handleSocks(c, in)
+			go handleSocks(c, in, authenticator)
 		}
 	}()
 
 	return sl, nil
 }
 
-func handleSocks(conn net.Conn, in chan<- C.ConnContext) {
-	conn.(*net.TCPConn).SetKeepAlive(true)
+func handleSocks(conn net.Conn, in chan<- C.ConnContext, authenticator auth.Authenticator) {
+	//conn.(*net.TCPConn).SetKeepAlive(true)
 	bufConn := N.NewBufferedConn(conn)
 	head, err := bufConn.Peek(1)
 	if err != nil {
@@ -73,16 +78,16 @@ func handleSocks(conn net.Conn, in chan<- C.ConnContext) {
 
 	switch head[0] {
 	case socks4.Version:
-		HandleSocks4(bufConn, in)
+		HandleSocks4(bufConn, in, authenticator)
 	case socks5.Version:
-		HandleSocks5(bufConn, in)
+		HandleSocks5(bufConn, in, authenticator)
 	default:
 		conn.Close()
 	}
 }
 
-func HandleSocks4(conn net.Conn, in chan<- C.ConnContext) {
-	addr, _, err := socks4.ServerHandshake(conn, authStore.Authenticator())
+func HandleSocks4(conn net.Conn, in chan<- C.ConnContext, authenticator auth.Authenticator) {
+	addr, _, err := socks4.ServerHandshake(conn, authenticator)
 	if err != nil {
 		conn.Close()
 		return
@@ -90,8 +95,8 @@ func HandleSocks4(conn net.Conn, in chan<- C.ConnContext) {
 	in <- inbound.NewSocket(socks5.ParseAddr(addr), conn, C.SOCKS4)
 }
 
-func HandleSocks5(conn net.Conn, in chan<- C.ConnContext) {
-	target, command, err := socks5.ServerHandshake(conn, authStore.Authenticator())
+func HandleSocks5(conn net.Conn, in chan<- C.ConnContext, authenticator auth.Authenticator) {
+	target, command, err := socks5.ServerHandshake(conn, authenticator)
 	if err != nil {
 		conn.Close()
 		return

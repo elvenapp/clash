@@ -15,6 +15,7 @@ type option struct {
 	fallbackBind  bool
 	addrReuse     bool
 	routingMark   int
+	protectSocket func(uintptr) error
 }
 
 type Option func(opt *option)
@@ -40,5 +41,11 @@ func WithAddrReuse(reuse bool) Option {
 func WithRoutingMark(mark int) Option {
 	return func(opt *option) {
 		opt.routingMark = mark
+	}
+}
+
+func WithProtectSocket(protectSocket func(fd uintptr) error) Option {
+	return func(opt *option) {
+		opt.protectSocket = protectSocket
 	}
 }

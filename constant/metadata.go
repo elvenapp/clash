@@ -23,6 +23,7 @@ const (
 	REDIR
 	TPROXY
 	TUNNEL
+	VPN
 )
 
 type NetWork int
@@ -54,6 +55,10 @@ func (t Type) String() string {
 		return "Redir"
 	case TPROXY:
 		return "TProxy"
+	case TUNNEL:
+		return "Tunnel"
+	case VPN:
+		return "VPN"
 	default:
 		return "Unknown"
 	}

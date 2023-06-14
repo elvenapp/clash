@@ -86,11 +86,28 @@ func (hc *HealthCheck) check(proxies []C.Proxy) {
 	b.Wait()
 }
 
+func (hc *HealthCheck) checkElement(name string) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultURLTestTimeout)
+	defer cancel()
+
+	for _, proxy := range hc.proxies {
+		if proxy.Name() == name {
+			proxy.URLTest(ctx, hc.url)
+
+			return
+		}
+	}
+}
+
 func (hc *HealthCheck) close() {
 	hc.done <- struct{}{}
 }
 
 func NewHealthCheck(proxies []C.Proxy, url string, interval uint, lazy bool) *HealthCheck {
+	if url == "" {
+		url = "https://www.gstatic.com/generate_204"
+	}
+
 	return &HealthCheck{
 		proxies:   proxies,
 		url:       url,

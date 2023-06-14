@@ -5,7 +5,6 @@ package outbound
 import (
 	"net"
 	"strconv"
-	"time"
 
 	"clash-foss/component/resolver"
 	C "clash-foss/constant"
@@ -14,11 +13,11 @@ import (
 	"github.com/Dreamacro/protobytes"
 )
 
-func tcpKeepAlive(c net.Conn) {
-	if tcp, ok := c.(*net.TCPConn); ok {
-		tcp.SetKeepAlive(true)
-		tcp.SetKeepAlivePeriod(30 * time.Second)
-	}
+func tcpKeepAlive(_ net.Conn) {
+	//if tcp, ok := c.(*net.TCPConn); ok {
+	//	tcp.SetKeepAlive(true)
+	//	tcp.SetKeepAlivePeriod(30 * time.Second)
+	//}
 }
 
 func serializesSocksAddr(metadata *C.Metadata) []byte {

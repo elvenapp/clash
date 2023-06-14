@@ -16,6 +16,7 @@ import (
 	"clash-foss/adapter/provider"
 	"clash-foss/component/auth"
 	"clash-foss/component/fakeip"
+	"clash-foss/component/fs"
 	"clash-foss/component/trie"
 	C "clash-foss/constant"
 	providerTypes "clash-foss/constant/provider"
@@ -224,7 +225,7 @@ func Parse(buf []byte) (*Config, error) {
 		return nil, err
 	}
 
-	return ParseRawConfig(rawCfg)
+	return ParseRawConfig(rawCfg, nil)
 }
 
 func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
@@ -265,7 +266,7 @@ func UnmarshalRawConfig(buf []byte) (*RawConfig, error) {
 	return rawCfg, nil
 }
 
-func ParseRawConfig(rawCfg *RawConfig) (*Config, error) {
+func ParseRawConfig(rawCfg *RawConfig, providerFS fs.ProviderFS) (*Config, error) {
 	config := &Config{}
 
 	config.Experimental = &rawCfg.Experimental
@@ -277,7 +278,7 @@ func ParseRawConfig(rawCfg *RawConfig) (*Config, error) {
 	}
 	config.General = general
 
-	proxies, providers, err := parseProxies(rawCfg)
+	proxies, providers, err := parseProxies(rawCfg, providerFS)
 	if err != nil {
 		return nil, err
 	}
@@ -350,7 +351,7 @@ func parseGeneral(cfg *RawConfig) (*General, error) {
 	}, nil
 }
 
-func parseProxies(cfg *RawConfig) (proxies map[string]C.Proxy, providersMap map[string]providerTypes.ProxyProvider, err error) {
+func parseProxies(cfg *RawConfig, providerFS fs.ProviderFS) (proxies map[string]C.Proxy, providersMap map[string]providerTypes.ProxyProvider, err error) {
 	proxies = make(map[string]C.Proxy)
 	providersMap = make(map[string]providerTypes.ProxyProvider)
 	proxyList := []string{}
@@ -396,7 +397,7 @@ func parseProxies(cfg *RawConfig) (proxies map[string]C.Proxy, providersMap map[
 			return nil, nil, fmt.Errorf("can not defined a provider called `%s`", provider.ReservedName)
 		}
 
-		pd, err := provider.ParseProxyProvider(name, mapping)
+		pd, err := provider.ParseProxyProvider(name, mapping, providerFS)
 		if err != nil {
 			return nil, nil, fmt.Errorf("parse proxy provider %s error: %w", name, err)
 		}
@@ -539,7 +540,7 @@ func hostWithDefaultPort(host string, defPort string) (string, error) {
 	return net.JoinHostPort(hostname, port), nil
 }
 
-func parseNameServer(servers []string) ([]dns.NameServer, error) {
+func ParseNameServer(servers []string) ([]dns.NameServer, error) {
 	nameservers := []dns.NameServer{}
 
 	for idx, server := range servers {
@@ -594,11 +595,11 @@ func parseNameServer(servers []string) ([]dns.NameServer, error) {
 	return nameservers, nil
 }
 
-func parseNameServerPolicy(nsPolicy map[string]string) (map[string]dns.NameServer, error) {
+func ParseNameServerPolicy(nsPolicy map[string]string) (map[string]dns.NameServer, error) {
 	policy := map[string]dns.NameServer{}
 
 	for domain, server := range nsPolicy {
-		nameservers, err := parseNameServer([]string{server})
+		nameservers, err := ParseNameServer([]string{server})
 		if err != nil {
 			return nil, err
 		}
@@ -641,22 +642,22 @@ func parseDNS(rawCfg *RawConfig, hosts *trie.DomainTrie) (*DNS, error) {
 		},
 	}
 	var err error
-	if dnsCfg.NameServer, err = parseNameServer(cfg.NameServer); err != nil {
+	if dnsCfg.NameServer, err = ParseNameServer(cfg.NameServer); err != nil {
 		return nil, err
 	}
 
-	if dnsCfg.Fallback, err = parseNameServer(cfg.Fallback); err != nil {
+	if dnsCfg.Fallback, err = ParseNameServer(cfg.Fallback); err != nil {
 		return nil, err
 	}
 
-	if dnsCfg.NameServerPolicy, err = parseNameServerPolicy(cfg.NameServerPolicy); err != nil {
+	if dnsCfg.NameServerPolicy, err = ParseNameServerPolicy(cfg.NameServerPolicy); err != nil {
 		return nil, err
 	}
 
 	if len(cfg.DefaultNameserver) == 0 {
 		return nil, errors.New("default nameserver should have at least one nameserver")
 	}
-	if dnsCfg.DefaultNameserver, err = parseNameServer(cfg.DefaultNameserver); err != nil {
+	if dnsCfg.DefaultNameserver, err = ParseNameServer(cfg.DefaultNameserver); err != nil {
 		return nil, err
 	}
 	// check default nameserver is pure ip addr

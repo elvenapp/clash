@@ -367,13 +367,13 @@ type Config struct {
 func NewResolver(config Config) *Resolver {
 	defaultResolver := &Resolver{
 		main:     transform(config.Default, nil),
-		lruCache: cache.New(cache.WithSize(4096), cache.WithStale(true)),
+		lruCache: cache.New(cache.WithSize(4096), cache.WithStale(false)),
 	}
 
 	r := &Resolver{
 		ipv6:          config.IPv6,
 		main:          transform(config.Main, defaultResolver),
-		lruCache:      cache.New(cache.WithSize(4096), cache.WithStale(true)),
+		lruCache:      cache.New(cache.WithSize(4096), cache.WithStale(false)),
 		hosts:         config.Hosts,
 		searchDomains: config.SearchDomains,
 	}

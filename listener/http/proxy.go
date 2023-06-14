@@ -9,21 +9,19 @@ import (
 	"strings"
 
 	"clash-foss/adapter/inbound"
-	"clash-foss/common/cache"
 	N "clash-foss/common/net"
+	"clash-foss/component/auth"
 	C "clash-foss/constant"
-	authStore "clash-foss/listener/auth"
-	"clash-foss/log"
 )
 
-func HandleConn(c net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {
+func HandleConn(c net.Conn, in chan<- C.ConnContext, authenticator auth.Authenticator) {
 	client := newClient(c.RemoteAddr(), c.LocalAddr(), in)
 	defer client.CloseIdleConnections()
 
 	conn := N.NewBufferedConn(c)
 
 	keepAlive := true
-	trusted := cache == nil // disable authenticate if cache is nil
+	trusted := authenticator == nil // disable authenticate if authenticator is nil
 
 	for keepAlive {
 		request, err := ReadRequest(conn.Reader())
@@ -38,7 +36,7 @@ func HandleConn(c net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {
 		var resp *http.Response
 
 		if !trusted {
-			resp = authenticate(request, cache)
+			resp = authenticate(request, authenticator)
 
 			trusted = resp == nil
 		}
@@ -100,27 +98,21 @@ func HandleConn(c net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {
 	conn.Close()
 }
 
-func authenticate(request *http.Request, cache *cache.LruCache) *http.Response {
-	authenticator := authStore.Authenticator()
-	if authenticator != nil {
-		credential := parseBasicProxyAuthorization(request)
-		if credential == "" {
-			resp := responseWith(request, http.StatusProxyAuthRequired)
-			resp.Header.Set("Proxy-Authenticate", "Basic")
-			return resp
-		}
+func authenticate(request *http.Request, authenticator auth.Authenticator) *http.Response {
+	credential := parseBasicProxyAuthorization(request)
+	if credential == "" {
+		resp := responseWith(request, http.StatusProxyAuthRequired)
+		resp.Header.Set("Proxy-Authenticate", "Basic")
+		return resp
+	}
 
-		authed, exist := cache.Get(credential)
-		if !exist {
-			user, pass, err := decodeBasicProxyAuthorization(credential)
-			authed = err == nil && authenticator.Verify(user, pass)
-			cache.Set(credential, authed)
-		}
-		if !authed.(bool) {
-			log.Infoln("Auth failed from %s", request.RemoteAddr)
+	user, pass, err := decodeBasicProxyAuthorization(credential)
+	if err != nil {
+		return responseWith(request, http.StatusBadRequest)
+	}
 
-			return responseWith(request, http.StatusForbidden)
-		}
+	if !authenticator.Verify(user, pass) {
+		return responseWith(request, http.StatusForbidden)
 	}
 
 	return nil

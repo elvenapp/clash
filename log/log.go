@@ -6,14 +6,16 @@ import (
 	"fmt"
 	"os"
 
+	"golang.org/x/exp/slog"
+
 	"clash-foss/common/observable"
 
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	logCh  = make(chan any)
-	source = observable.NewObservable(logCh)
+	logCh  = make(chan Event)
+	source = observable.NewObservableTyped[Event](logCh)
 	level  = INFO
 )
 
@@ -59,12 +61,12 @@ func Fatalln(format string, v ...any) {
 	log.Fatalf(format, v...)
 }
 
-func Subscribe() observable.Subscription {
+func Subscribe() observable.Subscription[Event] {
 	sub, _ := source.Subscribe()
 	return sub
 }
 
-func UnSubscribe(sub observable.Subscription) {
+func UnSubscribe(sub observable.Subscription[Event]) {
 	source.UnSubscribe(sub)
 }
 
@@ -77,19 +79,15 @@ func SetLevel(newLevel LogLevel) {
 }
 
 func print(data Event) {
-	if data.LogLevel < level {
-		return
-	}
-
 	switch data.LogLevel {
 	case INFO:
-		log.Infoln(data.Payload)
+		slog.Info(data.Payload)
 	case WARNING:
-		log.Warnln(data.Payload)
+		slog.Warn(data.Payload)
 	case ERROR:
-		log.Errorln(data.Payload)
+		slog.Error(data.Payload)
 	case DEBUG:
-		log.Debugln(data.Payload)
+		slog.Debug(data.Payload)
 	}
 }
 

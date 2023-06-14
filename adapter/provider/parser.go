@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"clash-foss/common/structure"
+	"clash-foss/component/fs"
 	C "clash-foss/constant"
 	types "clash-foss/constant/provider"
 )
@@ -33,7 +34,7 @@ type proxyProviderSchema struct {
 	HealthCheck healthCheckSchema `provider:"health-check,omitempty"`
 }
 
-func ParseProxyProvider(name string, mapping map[string]any) (types.ProxyProvider, error) {
+func ParseProxyProvider(name string, mapping map[string]any, providerFS fs.ProviderFS) (types.ProxyProvider, error) {
 	decoder := structure.NewDecoder(structure.Option{TagName: "provider", WeaklyTypedInput: true})
 
 	schema := &proxyProviderSchema{
@@ -51,22 +52,21 @@ func ParseProxyProvider(name string, mapping map[string]any) (types.ProxyProvide
 	}
 	hc := NewHealthCheck([]C.Proxy{}, schema.HealthCheck.URL, hcInterval, schema.HealthCheck.Lazy)
 
-	path := C.Path.Resolve(schema.Path)
-
 	var vehicle types.Vehicle
 	switch schema.Type {
 	case "file":
-		vehicle = NewFileVehicle(path)
+		vehicle = NewFileVehicle(func() ([]byte, error) {
+			data, _, err := providerFS.Read(types.Proxy, name)
+
+			return data, err
+		})
 	case "http":
-		if !C.Path.IsSubPath(path) {
-			return nil, fmt.Errorf("%w: %s", errSubPath, path)
-		}
-		vehicle = NewHTTPVehicle(schema.URL, path)
+		vehicle = NewHTTPVehicle(schema.URL)
 	default:
 		return nil, fmt.Errorf("%w: %s", errVehicleType, schema.Type)
 	}
 
 	interval := time.Duration(uint(schema.Interval)) * time.Second
 	filter := schema.Filter
-	return NewProxySetProvider(name, interval, filter, vehicle, hc)
+	return NewProxySetProvider(name, interval, filter, vehicle, hc, providerFS)
 }

@@ -36,7 +36,7 @@ func (l *Listener) Close() error {
 }
 
 func (l *Listener) handleTCP(conn net.Conn, in chan<- C.ConnContext) {
-	conn.(*net.TCPConn).SetKeepAlive(true)
+	//conn.(*net.TCPConn).SetKeepAlive(true)
 	ctx := inbound.NewSocket(l.target, conn, C.TUNNEL)
 	ctx.Metadata().SpecialProxy = l.proxy
 	in <- ctx

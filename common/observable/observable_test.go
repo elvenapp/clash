@@ -77,7 +77,7 @@ func TestObservable_SubscribeClosedSource(t *testing.T) {
 }
 
 func TestObservable_UnSubscribeWithNotExistSubscription(t *testing.T) {
-	sub := Subscription(make(chan any))
+	sub := Subscription[any](make(chan any))
 	iter := iterator([]any{1})
 	src := NewObservable(iter)
 	src.UnSubscribe(sub)
@@ -88,7 +88,7 @@ func TestObservable_SubscribeGoroutineLeak(t *testing.T) {
 	src := NewObservable(iter)
 	max := 100
 
-	var list []Subscription
+	var list []Subscription[any]
 	for i := 0; i < max; i++ {
 		ch, _ := src.Subscribe()
 		list = append(list, ch)
@@ -121,7 +121,7 @@ func Benchmark_Observable_1000(b *testing.B) {
 	o := NewObservable(ch)
 	num := 1000
 
-	subs := []Subscription{}
+	subs := []Subscription[any]{}
 	for i := 0; i < num; i++ {
 		sub, _ := o.Subscribe()
 		subs = append(subs, sub)
@@ -132,7 +132,7 @@ func Benchmark_Observable_1000(b *testing.B) {
 
 	b.ResetTimer()
 	for _, sub := range subs {
-		go func(s Subscription) {
+		go func(s Subscription[any]) {
 			for range s {
 			}
 			wg.Done()

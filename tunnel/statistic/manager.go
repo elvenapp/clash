@@ -3,95 +3,260 @@
 package statistic
 
 import (
+	"errors"
+	"io"
 	"sync"
+	"sync/atomic"
 	"time"
 
-	"go.uber.org/atomic"
+	"github.com/gofrs/uuid"
+
+	"clash-foss/component/ring"
+	C "clash-foss/constant"
 )
 
-var DefaultManager *Manager
+const (
+	MaxActiveTCPConnection = 512
+	MaxActiveUDPConnection = 256
+	MaxConnectionHistory   = 1024
+)
 
-func init() {
+var (
 	DefaultManager = &Manager{
-		uploadTemp:    atomic.NewInt64(0),
-		downloadTemp:  atomic.NewInt64(0),
-		uploadBlip:    atomic.NewInt64(0),
-		downloadBlip:  atomic.NewInt64(0),
-		uploadTotal:   atomic.NewInt64(0),
-		downloadTotal: atomic.NewInt64(0),
+		connections: map[uuid.UUID]*tracking{},
+		history:     ring.NewRing[*TrackerInfo](MaxConnectionHistory),
 	}
 
-	go DefaultManager.handle()
-}
+	defaultStatistics = statistics{}
+)
 
 type Manager struct {
-	connections   sync.Map
-	uploadTemp    *atomic.Int64
-	downloadTemp  *atomic.Int64
-	uploadBlip    *atomic.Int64
-	downloadBlip  *atomic.Int64
-	uploadTotal   *atomic.Int64
-	downloadTotal *atomic.Int64
+	lock sync.Mutex
+
+	tcpConnections uint64
+	udpConnections uint64
+	connections    map[uuid.UUID]*tracking
+	history        *ring.Ring[*TrackerInfo]
+
+	persistence *Persistence
 }
 
-func (m *Manager) Join(c tracker) {
-	m.connections.Store(c.ID(), c)
+func (m *Manager) TrackConn(conn C.Conn, metadata *C.Metadata, rule C.Rule) (C.Conn, error) {
+	tk, err := m.track(conn, conn.Chains(), metadata, rule)
+	if err != nil {
+		return nil, err
+	}
+
+	return &trackableConn{
+		Conn:    conn,
+		tracker: tk,
+	}, nil
 }
 
-func (m *Manager) Leave(c tracker) {
-	m.connections.Delete(c.ID())
+func (m *Manager) TrackPacketConn(conn C.PacketConn, metadata *C.Metadata, rule C.Rule) (C.PacketConn, error) {
+	tk, err := m.track(conn, conn.Chains(), metadata, rule)
+	if err != nil {
+		return nil, err
+	}
+
+	return &trackablePacketConn{
+		PacketConn: conn,
+		tracker:    tk,
+	}, nil
 }
 
-func (m *Manager) PushUploaded(size int64) {
-	m.uploadTemp.Add(size)
-	m.uploadTotal.Add(size)
+func (m *Manager) BandwidthDirect() (up, down uint64) {
+	s := m.statistics()
+
+	up = atomic.LoadUint64(&s.directUploaded)
+	down = atomic.LoadUint64(&s.directDownloaded)
+
+	return
 }
 
-func (m *Manager) PushDownloaded(size int64) {
-	m.downloadTemp.Add(size)
-	m.downloadTotal.Add(size)
+func (m *Manager) BandwidthProxy() (up, down uint64) {
+	s := m.statistics()
+
+	up = atomic.LoadUint64(&s.proxyUploaded)
+	down = atomic.LoadUint64(&s.proxyDownloaded)
+
+	return
 }
 
-func (m *Manager) Now() (up int64, down int64) {
-	return m.uploadBlip.Load(), m.downloadBlip.Load()
+func (m *Manager) ConnectionsCount() (now, history uint64) {
+	s := m.statistics()
+
+	now = atomic.LoadUint64(&m.tcpConnections) + atomic.LoadUint64(&m.udpConnections)
+	history = atomic.LoadUint64(&s.tracked)
+
+	return
+}
+
+func (m *Manager) ResetBandwidth() {
+	s := m.statistics()
+
+	atomic.StoreUint64(&s.directUploaded, 0)
+	atomic.StoreUint64(&s.directDownloaded, 0)
+	atomic.StoreUint64(&s.proxyUploaded, 0)
+	atomic.StoreUint64(&s.proxyDownloaded, 0)
+}
+
+func (m *Manager) ResetConnections() {
+	s := m.statistics()
+
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	atomic.StoreUint64(&s.tracked, m.tcpConnections+m.udpConnections)
 }
 
 func (m *Manager) Snapshot() *Snapshot {
-	connections := []tracker{}
-	m.connections.Range(func(key, value any) bool {
-		connections = append(connections, value.(tracker))
-		return true
-	})
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	connections := make([]*TrackerInfo, 0, len(m.connections))
+	for _, conn := range m.connections {
+		connections = append(connections, conn.info)
+	}
+
+	directUploadTotal, directDownloadTotal := m.BandwidthDirect()
+	proxyUploadTotal, proxyDownloadTotal := m.BandwidthDirect()
 
 	return &Snapshot{
-		UploadTotal:   m.uploadTotal.Load(),
-		DownloadTotal: m.downloadTotal.Load(),
+		UploadTotal:   directUploadTotal + proxyUploadTotal,
+		DownloadTotal: directDownloadTotal + proxyDownloadTotal,
 		Connections:   connections,
 	}
 }
 
-func (m *Manager) ResetStatistic() {
-	m.uploadTemp.Store(0)
-	m.uploadBlip.Store(0)
-	m.uploadTotal.Store(0)
-	m.downloadTemp.Store(0)
-	m.downloadBlip.Store(0)
-	m.downloadTotal.Store(0)
+func (m *Manager) CloseConnection(id uuid.UUID) (bool, error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	conn, ok := m.connections[id]
+	if ok {
+		return true, conn.conn.Close()
+	}
+
+	return false, nil
 }
 
-func (m *Manager) handle() {
-	ticker := time.NewTicker(time.Second)
+func (m *Manager) HistoryFirst() int {
+	m.lock.Lock()
+	defer m.lock.Unlock()
 
-	for range ticker.C {
-		m.uploadBlip.Store(m.uploadTemp.Load())
-		m.uploadTemp.Store(0)
-		m.downloadBlip.Store(m.downloadTemp.Load())
-		m.downloadTemp.Store(0)
+	return m.history.Position()
+}
+
+func (m *Manager) HistoryLast() int {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	return m.history.Limit()
+}
+
+func (m *Manager) DumpHistory(index int, out []*TrackerInfo) (int, bool) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	n, _, ok := m.history.Get(index, out)
+	return n, ok
+}
+
+func (m *Manager) InstallPersistence(p *Persistence) {
+	m.persistence = p
+}
+
+func (m *Manager) statistics() *statistics {
+	p := m.persistence
+	if p != nil {
+		return p.statistics
 	}
+
+	return &defaultStatistics
+}
+
+func (m *Manager) track(conn io.Closer, chain C.Chain, metadata *C.Metadata, rule C.Rule) (*tracker, error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	tcp := metadata.NetWork == C.TCP
+
+	if tcp {
+		if m.tcpConnections > MaxActiveTCPConnection {
+			return nil, errors.New("connections limit exceeded")
+		}
+	} else {
+		if m.udpConnections > MaxActiveUDPConnection {
+			return nil, errors.New("connections limit exceeded")
+		}
+	}
+
+	id, err := uuid.NewV4()
+	if err != nil {
+		return nil, err
+	}
+
+	s := m.statistics()
+
+	var upload *uint64
+	var download *uint64
+	if chain.Last() == "DIRECT" {
+		upload = &s.directUploaded
+		download = &s.directDownloaded
+	} else {
+		upload = &s.proxyUploaded
+		download = &s.proxyDownloaded
+	}
+
+	atomic.AddUint64(&s.tracked, 1)
+
+	t := &tracker{
+		info: &TrackerInfo{
+			UUID:     id,
+			Metadata: metadata,
+			Start:    time.Now(),
+			End:      nil,
+			Chain:    chain,
+		},
+		upload:   upload,
+		download: download,
+		dispose: func() {
+			m.lock.Lock()
+			defer m.lock.Unlock()
+
+			delete(m.connections, id)
+
+			if tcp {
+				m.tcpConnections--
+			} else {
+				m.udpConnections--
+			}
+		},
+	}
+
+	if rule != nil {
+		t.info.Rule = rule.RuleType().String()
+		t.info.RulePayload = rule.Payload()
+	}
+
+	m.history.Append([]*TrackerInfo{t.info})
+
+	m.connections[id] = &tracking{
+		conn: conn,
+		info: t.info,
+	}
+	if tcp {
+		m.tcpConnections++
+	} else {
+		m.udpConnections++
+	}
+
+	return t, nil
 }
 
 type Snapshot struct {
-	DownloadTotal int64     `json:"downloadTotal"`
-	UploadTotal   int64     `json:"uploadTotal"`
-	Connections   []tracker `json:"connections"`
+	DownloadTotal uint64         `json:"downloadTotal"`
+	UploadTotal   uint64         `json:"uploadTotal"`
+	Connections   []*TrackerInfo `json:"connections"`
 }

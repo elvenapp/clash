@@ -152,11 +152,6 @@ func withResolver(resolver *Resolver) handler {
 		ctx.SetType(context.DNSTypeRaw)
 		q := r.Question[0]
 
-		// return a empty AAAA msg when ipv6 disabled
-		if !resolver.ipv6 && q.Qtype == D.TypeAAAA {
-			return handleMsgWithEmptyAnswer(r), nil
-		}
-
 		msg, err := resolver.Exchange(r)
 		if err != nil {
 			log.Debugln("[DNS Server] Exchange %s failed: %v", q.String(), err)

@@ -7,11 +7,13 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"sync"
 	"time"
 
 	"clash-foss/adapter"
 	"clash-foss/adapter/outbound"
 	"clash-foss/common/singledo"
+	"clash-foss/component/fs"
 	C "clash-foss/constant"
 	types "clash-foss/constant/provider"
 
@@ -28,6 +30,10 @@ const (
 
 type ProxySchema struct {
 	Proxies []map[string]any `yaml:"proxies"`
+}
+
+type RuleScheme struct {
+	Payload []string `yaml:"payload"`
 }
 
 // for auto gc
@@ -51,12 +57,12 @@ func (pp *proxySetProvider) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func (pp *proxySetProvider) Name() string {
-	return pp.name
-}
-
 func (pp *proxySetProvider) HealthCheck() {
 	pp.healthCheck.checkAll()
+}
+
+func (pp *proxySetProvider) HealthCheckElement(name string) {
+	pp.healthCheck.checkElement(name)
 }
 
 func (pp *proxySetProvider) Update() error {
@@ -102,7 +108,7 @@ func stopProxyProvider(pd *ProxySetProvider) {
 	pd.fetcher.Destroy()
 }
 
-func NewProxySetProvider(name string, interval time.Duration, filter string, vehicle types.Vehicle, hc *HealthCheck) (*ProxySetProvider, error) {
+func NewProxySetProvider(name string, interval time.Duration, filter string, vehicle types.Vehicle, hc *HealthCheck, providerFS fs.ProviderFS) (*ProxySetProvider, error) {
 	filterReg, err := regexp.Compile(filter, regexp.None)
 	if err != nil {
 		return nil, fmt.Errorf("invalid filter regex: %w", err)
@@ -161,7 +167,7 @@ func NewProxySetProvider(name string, interval time.Duration, filter string, veh
 		return proxies, nil
 	}
 
-	fetcher := newFetcher(name, interval, vehicle, proxiesParseAndFilter, onUpdate)
+	fetcher := newFetcher(name, interval, vehicle, types.Proxy, proxiesParseAndFilter, onUpdate, providerFS)
 	pd.fetcher = fetcher
 
 	wrapper := &ProxySetProvider{pd}
@@ -195,6 +201,10 @@ func (cp *compatibleProvider) Name() string {
 
 func (cp *compatibleProvider) HealthCheck() {
 	cp.healthCheck.checkAll()
+}
+
+func (cp *compatibleProvider) HealthCheckElement(name string) {
+	cp.healthCheck.checkElement(name)
 }
 
 func (cp *compatibleProvider) Update() error {
@@ -268,6 +278,35 @@ func (fp *FilterableProvider) Name() string {
 }
 
 func (fp *FilterableProvider) HealthCheck() {
+	wg := sync.WaitGroup{}
+
+	for _, pd := range fp.providers {
+		wg.Add(1)
+
+		go func(pd types.ProxyProvider) {
+			pd.HealthCheck()
+
+			wg.Done()
+		}(pd)
+	}
+
+	wg.Wait()
+}
+
+func (fp *FilterableProvider) HealthCheckElement(name string) {
+	wg := sync.WaitGroup{}
+
+	for _, pd := range fp.providers {
+		wg.Add(1)
+
+		go func(pd types.ProxyProvider) {
+			pd.HealthCheckElement(name)
+
+			wg.Done()
+		}(pd)
+	}
+
+	wg.Wait()
 }
 
 func (fp *FilterableProvider) Update() error {

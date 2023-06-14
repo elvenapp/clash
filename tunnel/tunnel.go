@@ -14,6 +14,7 @@ import (
 
 	"clash-foss/adapter/inbound"
 	"clash-foss/component/nat"
+	"clash-foss/component/pkgname"
 	P "clash-foss/component/process"
 	"clash-foss/component/resolver"
 	C "clash-foss/constant"
@@ -269,7 +270,14 @@ func handleUDPConn(packet *inbound.PacketAdapter) {
 			return
 		}
 		pCtx.InjectPacketConn(rawPc)
-		pc := statistic.NewUDPTracker(rawPc, statistic.DefaultManager, metadata, rule)
+		pc, err := statistic.DefaultManager.TrackPacketConn(rawPc, metadata, rule)
+		if err != nil {
+			log.Warnln("[UDP] track connection %s: %s", rawPc.Chains().String(), err.Error())
+
+			rawPc.Close()
+
+			return
+		}
 
 		switch true {
 		case metadata.SpecialProxy != "":
@@ -341,7 +349,17 @@ func handleTCPConn(connCtx C.ConnContext) {
 		}
 		return
 	}
-	remoteConn = statistic.NewTCPTracker(remoteConn, statistic.DefaultManager, metadata, rule)
+
+	tc, err := statistic.DefaultManager.TrackConn(remoteConn, metadata, rule)
+	if err != nil {
+		log.Warnln("[UDP] track connection %s: %s", remoteConn.Chains().String(), err.Error())
+
+		remoteConn.Close()
+
+		return
+	}
+
+	remoteConn = tc
 	defer remoteConn.Close()
 
 	switch true {
@@ -398,6 +416,25 @@ func match(metadata *C.Metadata) (C.Proxy, C.Rule, error) {
 				metadata.DstIP = ip
 			}
 			resolved = true
+		}
+
+		if !processFound && rule.ShouldFindProcess() {
+			findPackage := pkgname.PackageNameFinder
+			if findPackage != nil {
+				processFound = true
+
+				srcAddr, err := netip.ParseAddrPort(net.JoinHostPort(metadata.SrcIP.String(), metadata.SrcPort))
+				if err == nil {
+					packageName, err := findPackage(metadata.NetWork.String(), srcAddr, metadata.OriginDst)
+					if err == nil {
+						metadata.ProcessPath = packageName
+
+						log.Debugln("[Process] %s from package name %s", metadata.String(), packageName)
+					} else {
+						log.Debugln("[Process] find package name %s: %v", metadata.String(), err)
+					}
+				}
+			}
 		}
 
 		if !processFound && rule.ShouldFindProcess() {

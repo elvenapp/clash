@@ -7,14 +7,14 @@ import (
 	"sync"
 )
 
-type Observable struct {
-	iterable Iterable
-	listener map[Subscription]*Subscriber
+type Observable[T any] struct {
+	iterable Iterable[T]
+	listener map[Subscription[T]]*Subscriber[T]
 	mux      sync.Mutex
 	done     bool
 }
 
-func (o *Observable) process() {
+func (o *Observable[T]) process() {
 	for item := range o.iterable {
 		o.mux.Lock()
 		for _, sub := range o.listener {
@@ -25,7 +25,7 @@ func (o *Observable) process() {
 	o.close()
 }
 
-func (o *Observable) close() {
+func (o *Observable[T]) close() {
 	o.mux.Lock()
 	defer o.mux.Unlock()
 
@@ -35,18 +35,18 @@ func (o *Observable) close() {
 	}
 }
 
-func (o *Observable) Subscribe() (Subscription, error) {
+func (o *Observable[T]) Subscribe() (Subscription[T], error) {
 	o.mux.Lock()
 	defer o.mux.Unlock()
 	if o.done {
-		return nil, errors.New("Observable is closed")
+		return nil, errors.New("observable is closed")
 	}
-	subscriber := newSubscriber()
+	subscriber := newSubscriber[T]()
 	o.listener[subscriber.Out()] = subscriber
 	return subscriber.Out(), nil
 }
 
-func (o *Observable) UnSubscribe(sub Subscription) {
+func (o *Observable[T]) UnSubscribe(sub Subscription[T]) {
 	o.mux.Lock()
 	defer o.mux.Unlock()
 	subscriber, exist := o.listener[sub]
@@ -57,11 +57,15 @@ func (o *Observable) UnSubscribe(sub Subscription) {
 	subscriber.Close()
 }
 
-func NewObservable(any Iterable) *Observable {
-	observable := &Observable{
-		iterable: any,
-		listener: map[Subscription]*Subscriber{},
+func NewObservableTyped[T any](iterable Iterable[T]) *Observable[T] {
+	observable := &Observable[T]{
+		iterable: iterable,
+		listener: map[Subscription[T]]*Subscriber[T]{},
 	}
 	go observable.process()
 	return observable
+}
+
+func NewObservable(iterable Iterable[any]) *Observable[any] {
+	return NewObservableTyped[any](iterable)
 }

@@ -80,29 +80,20 @@ func ParseProxyGroup(config map[string]any, proxyMap map[string]C.Proxy, provide
 		}
 
 		// select don't need health check
-		if groupOption.Type == "select" || groupOption.Type == "relay" {
-			hc := provider.NewHealthCheck(ps, "", 0, true)
-			pd, err := provider.NewCompatibleProvider(groupName, ps, hc)
-			if err != nil {
-				return nil, fmt.Errorf("%s: %w", groupName, err)
-			}
-
-			providers = append(providers, pd)
-			providersMap[groupName] = pd
-		} else {
+		if groupOption.Type != "select" && groupOption.Type != "relay" {
 			if groupOption.URL == "" || groupOption.Interval == 0 {
 				return nil, fmt.Errorf("%s: %w", groupName, errMissHealthCheck)
 			}
-
-			hc := provider.NewHealthCheck(ps, groupOption.URL, uint(groupOption.Interval), groupOption.Lazy)
-			pd, err := provider.NewCompatibleProvider(groupName, ps, hc)
-			if err != nil {
-				return nil, fmt.Errorf("%s: %w", groupName, err)
-			}
-
-			providers = append(providers, pd)
-			providersMap[groupName] = pd
 		}
+
+		hc := provider.NewHealthCheck(ps, groupOption.URL, uint(groupOption.Interval), groupOption.Lazy)
+		pd, err := provider.NewCompatibleProvider(groupName, ps, hc)
+		if err != nil {
+			return nil, err
+		}
+
+		providers = append(providers, pd)
+		providersMap[groupName] = pd
 	}
 
 	if len(groupOption.Use) != 0 {
@@ -111,8 +102,12 @@ func ParseProxyGroup(config map[string]any, proxyMap map[string]C.Proxy, provide
 			return nil, fmt.Errorf("%s: %w", groupName, err)
 		}
 		if filterReg != nil {
-			pd := provider.NewFilterableProvider(groupName, list, filterReg)
+			filterProviderName := groupName + "[filter]"
+
+			pd := provider.NewFilterableProvider(filterProviderName, list, filterReg)
+
 			providers = append(providers, pd)
+			providersMap[filterProviderName] = pd
 		} else {
 			providers = append(providers, list...)
 		}

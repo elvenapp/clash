@@ -7,7 +7,9 @@ import (
 
 	"clash-foss/common/cache"
 	N "clash-foss/common/net"
+	"clash-foss/component/auth"
 	C "clash-foss/constant"
+	authStore "clash-foss/listener/auth"
 	"clash-foss/listener/http"
 	"clash-foss/listener/socks"
 	"clash-foss/transport/socks4"
@@ -38,6 +40,10 @@ func (l *Listener) Close() error {
 }
 
 func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
+	return NewWithAuthenticator(addr, in, authStore.Authenticator())
+}
+
+func NewWithAuthenticator(addr string, in chan<- C.ConnContext, authenticator auth.Authenticator) (*Listener, error) {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return nil, err
@@ -57,15 +63,15 @@ func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
 				}
 				continue
 			}
-			go handleConn(c, in, ml.cache)
+			go handleConn(c, in, authenticator)
 		}
 	}()
 
 	return ml, nil
 }
 
-func handleConn(conn net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {
-	conn.(*net.TCPConn).SetKeepAlive(true)
+func handleConn(conn net.Conn, in chan<- C.ConnContext, authenticator auth.Authenticator) {
+	//conn.(*net.TCPConn).SetKeepAlive(true)
 
 	bufConn := N.NewBufferedConn(conn)
 	head, err := bufConn.Peek(1)
@@ -75,10 +81,10 @@ func handleConn(conn net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {
 
 	switch head[0] {
 	case socks4.Version:
-		socks.HandleSocks4(bufConn, in)
+		socks.HandleSocks4(bufConn, in, authenticator)
 	case socks5.Version:
-		socks.HandleSocks5(bufConn, in)
+		socks.HandleSocks5(bufConn, in, authenticator)
 	default:
-		http.HandleConn(bufConn, in, cache)
+		http.HandleConn(bufConn, in, authenticator)
 	}
 }

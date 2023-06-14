@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 
 	"clash-foss/component/dialer"
@@ -16,36 +15,27 @@ import (
 )
 
 type FileVehicle struct {
-	path string
+	readAll func() ([]byte, error)
 }
 
 func (f *FileVehicle) Type() types.VehicleType {
 	return types.File
 }
 
-func (f *FileVehicle) Path() string {
-	return f.path
-}
-
 func (f *FileVehicle) Read() ([]byte, error) {
-	return os.ReadFile(f.path)
+	return f.readAll()
 }
 
-func NewFileVehicle(path string) *FileVehicle {
-	return &FileVehicle{path: path}
+func NewFileVehicle(readAll func() ([]byte, error)) *FileVehicle {
+	return &FileVehicle{readAll}
 }
 
 type HTTPVehicle struct {
-	url  string
-	path string
+	url string
 }
 
 func (h *HTTPVehicle) Type() types.VehicleType {
 	return types.HTTP
-}
-
-func (h *HTTPVehicle) Path() string {
-	return h.path
 }
 
 func (h *HTTPVehicle) Read() ([]byte, error) {
@@ -95,6 +85,6 @@ func (h *HTTPVehicle) Read() ([]byte, error) {
 	return buf, nil
 }
 
-func NewHTTPVehicle(url string, path string) *HTTPVehicle {
-	return &HTTPVehicle{url, path}
+func NewHTTPVehicle(url string) *HTTPVehicle {
+	return &HTTPVehicle{url}
 }

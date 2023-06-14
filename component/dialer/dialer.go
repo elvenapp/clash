@@ -52,6 +52,9 @@ func ListenPacket(ctx context.Context, network, address string, options ...Optio
 	}
 
 	lc := &net.ListenConfig{}
+	if cfg.protectSocket != nil {
+		lc.Control = protectSocketFunc(cfg.protectSocket)
+	}
 	if cfg.interfaceName != "" {
 		var (
 			addr string
@@ -92,6 +95,9 @@ func dialContext(ctx context.Context, network string, destination net.IP, port s
 	}
 
 	dialer := &net.Dialer{}
+	if opt.protectSocket != nil {
+		dialer.Control = protectSocketFunc(opt.protectSocket)
+	}
 	if opt.interfaceName != "" {
 		if opt.fallbackBind {
 			if err := fallbackBindIfaceToDialer(opt.interfaceName, dialer, network, destination); err != nil {
