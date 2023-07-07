@@ -1,3 +1,5 @@
+//go:build foss
+
 package outboundgroup
 
 import (
@@ -5,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 func addrToMetadata(rawAddress string) (addr *C.Metadata, err error) {

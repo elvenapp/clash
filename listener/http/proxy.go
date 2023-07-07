@@ -1,3 +1,5 @@
+//go:build foss
+
 package http
 
 import (
@@ -6,12 +8,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	"github.com/Dreamacro/clash/common/cache"
-	N "github.com/Dreamacro/clash/common/net"
-	C "github.com/Dreamacro/clash/constant"
-	authStore "github.com/Dreamacro/clash/listener/auth"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/adapter/inbound"
+	"clash-foss/common/cache"
+	N "clash-foss/common/net"
+	C "clash-foss/constant"
+	authStore "clash-foss/listener/auth"
+	"clash-foss/log"
 )
 
 func HandleConn(c net.Conn, in chan<- C.ConnContext, cache *cache.LruCache) {

@@ -1,3 +1,5 @@
+//go:build foss
+
 package resolver
 
 import (
@@ -9,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Dreamacro/clash/component/trie"
+	"clash-foss/component/trie"
 
 	"github.com/miekg/dns"
 )

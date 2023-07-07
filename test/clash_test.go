@@ -1,3 +1,5 @@
+//go:build foss
+
 package main
 
 import (
@@ -21,10 +23,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/Dreamacro/clash/adapter/outbound"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/hub/executor"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/adapter/outbound"
+	C "clash-foss/constant"
+	"clash-foss/hub/executor"
+	"clash-foss/transport/socks5"
 )
 
 const (

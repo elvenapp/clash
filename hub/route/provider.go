@@ -1,12 +1,14 @@
+//go:build foss
+
 package route
 
 import (
 	"context"
 	"net/http"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/constant/provider"
-	"github.com/Dreamacro/clash/tunnel"
+	C "clash-foss/constant"
+	"clash-foss/constant/provider"
+	"clash-foss/tunnel"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"

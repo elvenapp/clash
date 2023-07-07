@@ -1,10 +1,12 @@
+//go:build foss
+
 package socks
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/pool"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/common/pool"
+	"clash-foss/transport/socks5"
 )
 
 type packet struct {

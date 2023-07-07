@@ -1,3 +1,5 @@
+//go:build foss
+
 package dns
 
 import (
@@ -10,8 +12,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	"github.com/Dreamacro/clash/component/resolver"
+	"clash-foss/component/dialer"
+	"clash-foss/component/resolver"
 
 	D "github.com/miekg/dns"
 )

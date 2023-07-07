@@ -1,4 +1,4 @@
-//go:build !darwin && !linux && !freebsd
+//go:build foss && !darwin && !linux && !freebsd
 
 package redir
 
@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/transport/socks5"
 )
 
 func parserPacket(conn net.Conn) (socks5.Addr, error) {

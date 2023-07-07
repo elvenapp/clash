@@ -1,3 +1,5 @@
+//go:build foss
+
 package config
 
 import (
@@ -8,19 +10,19 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Dreamacro/clash/adapter"
-	"github.com/Dreamacro/clash/adapter/outbound"
-	"github.com/Dreamacro/clash/adapter/outboundgroup"
-	"github.com/Dreamacro/clash/adapter/provider"
-	"github.com/Dreamacro/clash/component/auth"
-	"github.com/Dreamacro/clash/component/fakeip"
-	"github.com/Dreamacro/clash/component/trie"
-	C "github.com/Dreamacro/clash/constant"
-	providerTypes "github.com/Dreamacro/clash/constant/provider"
-	"github.com/Dreamacro/clash/dns"
-	"github.com/Dreamacro/clash/log"
-	R "github.com/Dreamacro/clash/rule"
-	T "github.com/Dreamacro/clash/tunnel"
+	"clash-foss/adapter"
+	"clash-foss/adapter/outbound"
+	"clash-foss/adapter/outboundgroup"
+	"clash-foss/adapter/provider"
+	"clash-foss/component/auth"
+	"clash-foss/component/fakeip"
+	"clash-foss/component/trie"
+	C "clash-foss/constant"
+	providerTypes "clash-foss/constant/provider"
+	"clash-foss/dns"
+	"clash-foss/log"
+	R "clash-foss/rule"
+	T "clash-foss/tunnel"
 
 	"github.com/samber/lo"
 	"gopkg.in/yaml.v3"

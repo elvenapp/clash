@@ -1,3 +1,5 @@
+//go:build foss
+
 package snell
 
 import (
@@ -7,9 +9,9 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Dreamacro/clash/common/pool"
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowaead"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/common/pool"
+	"clash-foss/transport/shadowsocks/shadowaead"
+	"clash-foss/transport/socks5"
 )
 
 const (

@@ -1,3 +1,5 @@
+//go:build foss
+
 package iface
 
 import (
@@ -5,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/Dreamacro/clash/common/singledo"
+	"clash-foss/common/singledo"
 )
 
 type Interface struct {

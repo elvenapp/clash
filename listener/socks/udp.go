@@ -1,14 +1,16 @@
+//go:build foss
+
 package socks
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	"github.com/Dreamacro/clash/common/pool"
-	"github.com/Dreamacro/clash/common/sockopt"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/adapter/inbound"
+	"clash-foss/common/pool"
+	"clash-foss/common/sockopt"
+	C "clash-foss/constant"
+	"clash-foss/log"
+	"clash-foss/transport/socks5"
 )
 
 type UDPListener struct {

@@ -1,3 +1,5 @@
+//go:build foss
+
 package dialer
 
 import "go.uber.org/atomic"

@@ -1,13 +1,15 @@
+//go:build foss
+
 package tproxy
 
 import (
 	"net"
 	"net/netip"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	"github.com/Dreamacro/clash/common/pool"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/adapter/inbound"
+	"clash-foss/common/pool"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
 )
 
 type UDPListener struct {

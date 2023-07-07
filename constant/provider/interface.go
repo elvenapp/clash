@@ -1,7 +1,9 @@
+//go:build foss
+
 package provider
 
 import (
-	"github.com/Dreamacro/clash/constant"
+	"clash-foss/constant"
 )
 
 // Vehicle Type

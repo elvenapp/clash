@@ -1,10 +1,12 @@
+//go:build foss
+
 package log
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/Dreamacro/clash/common/observable"
+	"clash-foss/common/observable"
 
 	log "github.com/sirupsen/logrus"
 )

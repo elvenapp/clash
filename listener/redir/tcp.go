@@ -1,10 +1,12 @@
+//go:build foss
+
 package redir
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/adapter/inbound"
+	C "clash-foss/constant"
 )
 
 type Listener struct {

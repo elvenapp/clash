@@ -1,3 +1,5 @@
+//go:build foss
+
 package constant
 
 import (
@@ -6,7 +8,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/Dreamacro/clash/component/dialer"
+	"clash-foss/component/dialer"
 )
 
 // Adapter Type

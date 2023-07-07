@@ -1,9 +1,11 @@
+//go:build foss
+
 package nat
 
 import (
 	"sync"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type Table struct {

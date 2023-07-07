@@ -1,3 +1,5 @@
+//go:build foss
+
 package config
 
 import (
@@ -6,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Dreamacro/clash/component/mmdb"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/component/mmdb"
+	C "clash-foss/constant"
+	"clash-foss/log"
 )
 
 func downloadMMDB(path string) (err error) {

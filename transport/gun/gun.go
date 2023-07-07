@@ -1,3 +1,5 @@
+//go:build foss
+
 // Modified from: https://github.com/Qv2ray/gun-lite
 // License: MIT
 
@@ -17,7 +19,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 
 	"go.uber.org/atomic"
 	"golang.org/x/net/http2"

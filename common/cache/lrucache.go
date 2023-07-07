@@ -1,3 +1,5 @@
+//go:build foss
+
 package cache
 
 // Modified by https://github.com/die-net/lrucache

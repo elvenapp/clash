@@ -1,10 +1,12 @@
+//go:build foss
+
 package dialer
 
 import (
 	"net"
 	"syscall"
 
-	"github.com/Dreamacro/clash/component/iface"
+	"clash-foss/component/iface"
 
 	"golang.org/x/sys/unix"
 )

@@ -1,11 +1,13 @@
+//go:build foss
+
 package dns
 
 import (
 	"net"
 	"strings"
 
-	"github.com/Dreamacro/clash/component/mmdb"
-	"github.com/Dreamacro/clash/component/trie"
+	"clash-foss/component/mmdb"
+	"clash-foss/component/trie"
 )
 
 type fallbackIPFilter interface {

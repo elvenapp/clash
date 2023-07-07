@@ -1,10 +1,12 @@
+//go:build foss
+
 package http
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/cache"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/common/cache"
+	C "clash-foss/constant"
 )
 
 type Listener struct {

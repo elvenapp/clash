@@ -1,3 +1,5 @@
+//go:build foss
+
 package trojan
 
 import (
@@ -12,9 +14,9 @@ import (
 	"net/http"
 	"sync"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
-	"github.com/Dreamacro/clash/transport/vmess"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
+	"clash-foss/transport/vmess"
 
 	"github.com/Dreamacro/protobytes"
 )

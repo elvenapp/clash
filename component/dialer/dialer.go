@@ -1,3 +1,5 @@
+//go:build foss
+
 package dialer
 
 import (
@@ -5,7 +7,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/Dreamacro/clash/component/resolver"
+	"clash-foss/component/resolver"
 )
 
 func DialContext(ctx context.Context, network, address string, options ...Option) (net.Conn, error) {

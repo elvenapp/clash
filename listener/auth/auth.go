@@ -1,7 +1,9 @@
+//go:build foss
+
 package auth
 
 import (
-	"github.com/Dreamacro/clash/component/auth"
+	"clash-foss/component/auth"
 )
 
 var authenticator auth.Authenticator

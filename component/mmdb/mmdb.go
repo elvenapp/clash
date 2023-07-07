@@ -1,10 +1,12 @@
+//go:build foss
+
 package mmdb
 
 import (
 	"sync"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
+	C "clash-foss/constant"
+	"clash-foss/log"
 
 	"github.com/oschwald/geoip2-golang"
 )

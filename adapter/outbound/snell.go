@@ -1,3 +1,5 @@
+//go:build foss
+
 package outbound
 
 import (
@@ -6,11 +8,11 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/Dreamacro/clash/common/structure"
-	"github.com/Dreamacro/clash/component/dialer"
-	C "github.com/Dreamacro/clash/constant"
-	obfs "github.com/Dreamacro/clash/transport/simple-obfs"
-	"github.com/Dreamacro/clash/transport/snell"
+	"clash-foss/common/structure"
+	"clash-foss/component/dialer"
+	C "clash-foss/constant"
+	obfs "clash-foss/transport/simple-obfs"
+	"clash-foss/transport/snell"
 )
 
 type Snell struct {

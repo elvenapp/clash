@@ -1,3 +1,5 @@
+//go:build foss
+
 package adapter
 
 import (
@@ -9,9 +11,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Dreamacro/clash/common/queue"
-	"github.com/Dreamacro/clash/component/dialer"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/common/queue"
+	"clash-foss/component/dialer"
+	C "clash-foss/constant"
 
 	"go.uber.org/atomic"
 )

@@ -1,3 +1,5 @@
+//go:build foss
+
 package shadowaead
 
 import (
@@ -6,7 +8,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 // ErrShortPacket means that the packet is too short for a valid encrypted packet.

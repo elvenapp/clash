@@ -1,3 +1,5 @@
+//go:build foss
+
 package provider
 
 import (
@@ -7,11 +9,11 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Dreamacro/clash/adapter"
-	"github.com/Dreamacro/clash/adapter/outbound"
-	"github.com/Dreamacro/clash/common/singledo"
-	C "github.com/Dreamacro/clash/constant"
-	types "github.com/Dreamacro/clash/constant/provider"
+	"clash-foss/adapter"
+	"clash-foss/adapter/outbound"
+	"clash-foss/common/singledo"
+	C "clash-foss/constant"
+	types "clash-foss/constant/provider"
 
 	regexp "github.com/dlclark/regexp2"
 	"github.com/samber/lo"

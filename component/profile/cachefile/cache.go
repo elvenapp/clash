@@ -1,3 +1,5 @@
+//go:build foss
+
 package cachefile
 
 import (
@@ -5,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Dreamacro/clash/component/profile"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/component/profile"
+	C "clash-foss/constant"
+	"clash-foss/log"
 
 	"go.etcd.io/bbolt"
 )

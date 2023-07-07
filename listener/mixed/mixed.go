@@ -1,15 +1,17 @@
+//go:build foss
+
 package mixed
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/cache"
-	N "github.com/Dreamacro/clash/common/net"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/listener/http"
-	"github.com/Dreamacro/clash/listener/socks"
-	"github.com/Dreamacro/clash/transport/socks4"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/common/cache"
+	N "clash-foss/common/net"
+	C "clash-foss/constant"
+	"clash-foss/listener/http"
+	"clash-foss/listener/socks"
+	"clash-foss/transport/socks4"
+	"clash-foss/transport/socks5"
 )
 
 type Listener struct {

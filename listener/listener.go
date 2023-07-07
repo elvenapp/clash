@@ -1,3 +1,5 @@
+//go:build foss
+
 package listener
 
 import (
@@ -7,16 +9,16 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	"github.com/Dreamacro/clash/config"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/listener/http"
-	"github.com/Dreamacro/clash/listener/mixed"
-	"github.com/Dreamacro/clash/listener/redir"
-	"github.com/Dreamacro/clash/listener/socks"
-	"github.com/Dreamacro/clash/listener/tproxy"
-	"github.com/Dreamacro/clash/listener/tunnel"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/adapter/inbound"
+	"clash-foss/config"
+	C "clash-foss/constant"
+	"clash-foss/listener/http"
+	"clash-foss/listener/mixed"
+	"clash-foss/listener/redir"
+	"clash-foss/listener/socks"
+	"clash-foss/listener/tproxy"
+	"clash-foss/listener/tunnel"
+	"clash-foss/log"
 
 	"github.com/samber/lo"
 )

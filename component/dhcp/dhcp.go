@@ -1,3 +1,5 @@
+//go:build foss
+
 package dhcp
 
 import (
@@ -5,7 +7,7 @@ import (
 	"errors"
 	"net"
 
-	"github.com/Dreamacro/clash/component/iface"
+	"clash-foss/component/iface"
 
 	"github.com/insomniacslk/dhcp/dhcpv4"
 )

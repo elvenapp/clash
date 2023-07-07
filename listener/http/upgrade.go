@@ -1,3 +1,5 @@
+//go:build foss
+
 package http
 
 import (
@@ -5,10 +7,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	N "github.com/Dreamacro/clash/common/net"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/adapter/inbound"
+	N "clash-foss/common/net"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
 )
 
 func isUpgradeRequest(req *http.Request) bool {

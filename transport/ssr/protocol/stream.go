@@ -1,10 +1,12 @@
+//go:build foss
+
 package protocol
 
 import (
 	"bytes"
 	"net"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 type Conn struct {

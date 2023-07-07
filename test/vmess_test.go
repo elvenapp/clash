@@ -1,3 +1,5 @@
+//go:build foss
+
 package main
 
 import (
@@ -8,8 +10,8 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/stretchr/testify/require"
 
-	"github.com/Dreamacro/clash/adapter/outbound"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/adapter/outbound"
+	C "clash-foss/constant"
 )
 
 func TestClash_Vmess(t *testing.T) {

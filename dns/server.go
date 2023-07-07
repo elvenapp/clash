@@ -1,12 +1,14 @@
+//go:build foss
+
 package dns
 
 import (
 	"errors"
 	"net"
 
-	"github.com/Dreamacro/clash/common/sockopt"
-	"github.com/Dreamacro/clash/context"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/common/sockopt"
+	"clash-foss/context"
+	"clash-foss/log"
 
 	D "github.com/miekg/dns"
 )

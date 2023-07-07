@@ -1,10 +1,12 @@
+//go:build foss
+
 package protocol
 
 import (
 	"net"
 	"sort"
 
-	"github.com/Dreamacro/clash/transport/ssr/tools"
+	"clash-foss/transport/ssr/tools"
 )
 
 func init() {

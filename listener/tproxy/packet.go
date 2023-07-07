@@ -1,10 +1,12 @@
+//go:build foss
+
 package tproxy
 
 import (
 	"net"
 	"net/netip"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 type packet struct {

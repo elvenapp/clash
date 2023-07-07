@@ -1,4 +1,4 @@
-//go:build !linux && !darwin && !windows
+//go:build foss && !linux && !darwin && !windows
 
 package dialer
 

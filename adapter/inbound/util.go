@@ -1,3 +1,5 @@
+//go:build foss
+
 package inbound
 
 import (
@@ -6,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
 )
 
 func parseSocksAddr(target socks5.Addr) *C.Metadata {

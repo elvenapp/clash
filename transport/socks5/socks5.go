@@ -1,3 +1,5 @@
+//go:build foss
+
 package socks5
 
 import (
@@ -9,7 +11,7 @@ import (
 	"net/netip"
 	"strconv"
 
-	"github.com/Dreamacro/clash/component/auth"
+	"clash-foss/component/auth"
 
 	"github.com/Dreamacro/protobytes"
 )

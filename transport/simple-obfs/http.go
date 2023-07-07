@@ -1,3 +1,5 @@
+//go:build foss
+
 package obfs
 
 import (
@@ -10,7 +12,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 // HTTPObfs is shadowsocks http simple-obfs implementation

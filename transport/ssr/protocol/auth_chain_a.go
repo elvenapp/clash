@@ -1,3 +1,5 @@
+//go:build foss
+
 package protocol
 
 import (
@@ -11,10 +13,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Dreamacro/clash/common/pool"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/transport/shadowsocks/core"
-	"github.com/Dreamacro/clash/transport/ssr/tools"
+	"clash-foss/common/pool"
+	"clash-foss/log"
+	"clash-foss/transport/shadowsocks/core"
+	"clash-foss/transport/ssr/tools"
 )
 
 func init() {

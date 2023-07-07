@@ -1,9 +1,11 @@
+//go:build foss
+
 package rules
 
 import (
-	"github.com/Dreamacro/clash/component/ipset"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/component/ipset"
+	C "clash-foss/constant"
+	"clash-foss/log"
 )
 
 type IPSet struct {

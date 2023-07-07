@@ -1,3 +1,5 @@
+//go:build foss
+
 package auth
 
 import (

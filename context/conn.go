@@ -1,9 +1,11 @@
+//go:build foss
+
 package context
 
 import (
 	"net"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 
 	"github.com/gofrs/uuid/v5"
 )

@@ -1,3 +1,5 @@
+//go:build foss
+
 package dhcp
 
 import (
@@ -5,7 +7,7 @@ import (
 	"net"
 	"runtime"
 
-	"github.com/Dreamacro/clash/component/dialer"
+	"clash-foss/component/dialer"
 )
 
 func ListenDHCPClient(ctx context.Context, ifaceName string) (net.PacketConn, error) {

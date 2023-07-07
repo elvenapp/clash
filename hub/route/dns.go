@@ -1,3 +1,5 @@
+//go:build foss
+
 package route
 
 import (
@@ -5,7 +7,7 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/Dreamacro/clash/component/resolver"
+	"clash-foss/component/resolver"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"

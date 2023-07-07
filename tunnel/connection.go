@@ -1,3 +1,5 @@
+//go:build foss
+
 package tunnel
 
 import (
@@ -6,9 +8,9 @@ import (
 	"net/netip"
 	"time"
 
-	N "github.com/Dreamacro/clash/common/net"
-	"github.com/Dreamacro/clash/common/pool"
-	C "github.com/Dreamacro/clash/constant"
+	N "clash-foss/common/net"
+	"clash-foss/common/pool"
+	C "clash-foss/constant"
 )
 
 func handleUDPToRemote(packet C.UDPPacket, pc C.PacketConn, metadata *C.Metadata) error {

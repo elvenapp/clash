@@ -1,3 +1,5 @@
+//go:build foss
+
 package dialer
 
 import (
@@ -5,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Dreamacro/clash/component/iface"
+	"clash-foss/component/iface"
 )
 
 func lookupLocalAddr(ifaceName string, network string, destination net.IP, port int) (net.Addr, error) {

@@ -1,3 +1,5 @@
+//go:build foss
+
 package constant
 
 import (
@@ -6,7 +8,7 @@ import (
 	"net/netip"
 	"strconv"
 
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/transport/socks5"
 )
 
 // Socks addr type

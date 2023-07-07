@@ -1,10 +1,12 @@
+//go:build foss
+
 package outboundgroup
 
 import (
 	"time"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/constant/provider"
+	C "clash-foss/constant"
+	"clash-foss/constant/provider"
 )
 
 const (

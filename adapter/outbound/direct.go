@@ -1,11 +1,13 @@
+//go:build foss
+
 package outbound
 
 import (
 	"context"
 	"net"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/component/dialer"
+	C "clash-foss/constant"
 )
 
 type Direct struct {

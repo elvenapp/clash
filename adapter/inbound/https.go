@@ -1,3 +1,5 @@
+//go:build foss
+
 package inbound
 
 import (
@@ -5,8 +7,8 @@ import (
 	"net/http"
 	"net/netip"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/context"
+	C "clash-foss/constant"
+	"clash-foss/context"
 )
 
 // NewHTTPS receive CONNECT request and return ConnContext

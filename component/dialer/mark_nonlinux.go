@@ -1,4 +1,4 @@
-//go:build !linux
+//go:build foss && !linux
 
 package dialer
 
@@ -6,7 +6,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/log"
 )
 
 var printMarkWarnOnce sync.Once

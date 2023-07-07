@@ -1,9 +1,11 @@
+//go:build foss
+
 package rules
 
 import (
 	"strconv"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type Port struct {

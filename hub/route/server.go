@@ -1,3 +1,5 @@
+//go:build foss
+
 package route
 
 import (
@@ -10,9 +12,9 @@ import (
 	"time"
 	"unsafe"
 
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/tunnel/statistic"
+	C "clash-foss/constant"
+	"clash-foss/log"
+	"clash-foss/tunnel/statistic"
 
 	"github.com/Dreamacro/protobytes"
 	"github.com/go-chi/chi/v5"

@@ -1,10 +1,12 @@
+//go:build foss
+
 package rules
 
 import (
 	"path/filepath"
 	"strings"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type Process struct {

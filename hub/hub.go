@@ -1,9 +1,11 @@
+//go:build foss
+
 package hub
 
 import (
-	"github.com/Dreamacro/clash/config"
-	"github.com/Dreamacro/clash/hub/executor"
-	"github.com/Dreamacro/clash/hub/route"
+	"clash-foss/config"
+	"clash-foss/hub/executor"
+	"clash-foss/hub/route"
 )
 
 type Option func(*config.Config)

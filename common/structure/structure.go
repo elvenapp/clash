@@ -1,3 +1,5 @@
+//go:build foss
+
 package structure
 
 // references: https://github.com/mitchellh/mapstructure

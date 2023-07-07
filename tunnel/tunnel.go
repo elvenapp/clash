@@ -1,3 +1,5 @@
+//go:build foss
+
 package tunnel
 
 import (
@@ -10,15 +12,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	"github.com/Dreamacro/clash/component/nat"
-	P "github.com/Dreamacro/clash/component/process"
-	"github.com/Dreamacro/clash/component/resolver"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/constant/provider"
-	icontext "github.com/Dreamacro/clash/context"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/tunnel/statistic"
+	"clash-foss/adapter/inbound"
+	"clash-foss/component/nat"
+	P "clash-foss/component/process"
+	"clash-foss/component/resolver"
+	C "clash-foss/constant"
+	"clash-foss/constant/provider"
+	icontext "clash-foss/context"
+	"clash-foss/log"
+	"clash-foss/tunnel/statistic"
 
 	"go.uber.org/atomic"
 )

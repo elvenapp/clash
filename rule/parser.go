@@ -1,9 +1,11 @@
+//go:build foss
+
 package rules
 
 import (
 	"fmt"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 func ParseRule(tp, payload, target string, params []string) (C.Rule, error) {

@@ -1,3 +1,5 @@
+//go:build foss
+
 package murmur3
 
 // https://github.com/spaolacci/murmur3/blob/master/murmur32.go

@@ -1,3 +1,5 @@
+//go:build foss
+
 package snell
 
 import (
@@ -5,8 +7,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/Dreamacro/clash/component/pool"
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowaead"
+	"clash-foss/component/pool"
+	"clash-foss/transport/shadowsocks/shadowaead"
 )
 
 type Pool struct {

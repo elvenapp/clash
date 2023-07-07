@@ -1,3 +1,5 @@
+//go:build foss
+
 package dns
 
 import (
@@ -5,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Dreamacro/clash/common/cache"
-	"github.com/Dreamacro/clash/component/fakeip"
-	"github.com/Dreamacro/clash/component/trie"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/context"
-	"github.com/Dreamacro/clash/log"
+	"clash-foss/common/cache"
+	"clash-foss/component/fakeip"
+	"clash-foss/component/trie"
+	C "clash-foss/constant"
+	"clash-foss/context"
+	"clash-foss/log"
 
 	D "github.com/miekg/dns"
 )

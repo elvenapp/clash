@@ -1,3 +1,5 @@
+//go:build foss
+
 package process
 
 import (
@@ -9,7 +11,7 @@ import (
 	"os"
 	"unsafe"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 
 	"github.com/mdlayher/netlink"
 	"golang.org/x/sys/unix"

@@ -1,3 +1,5 @@
+//go:build foss
+
 package process
 
 import (
@@ -8,7 +10,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 var (

@@ -1,11 +1,13 @@
+//go:build foss
+
 package dns
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/cache"
-	"github.com/Dreamacro/clash/component/fakeip"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/common/cache"
+	"clash-foss/component/fakeip"
+	C "clash-foss/constant"
 )
 
 type ResolverEnhancer struct {

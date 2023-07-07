@@ -1,3 +1,5 @@
+//go:build foss
+
 package vmess
 
 import (
@@ -7,7 +9,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 type aeadWriter struct {

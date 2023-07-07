@@ -1,3 +1,5 @@
+//go:build foss
+
 package executor
 
 import (
@@ -5,23 +7,23 @@ import (
 	"os"
 	"sync"
 
-	"github.com/Dreamacro/clash/adapter"
-	"github.com/Dreamacro/clash/adapter/outboundgroup"
-	"github.com/Dreamacro/clash/component/auth"
-	"github.com/Dreamacro/clash/component/dialer"
-	"github.com/Dreamacro/clash/component/iface"
-	"github.com/Dreamacro/clash/component/profile"
-	"github.com/Dreamacro/clash/component/profile/cachefile"
-	"github.com/Dreamacro/clash/component/resolver"
-	"github.com/Dreamacro/clash/component/trie"
-	"github.com/Dreamacro/clash/config"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/constant/provider"
-	"github.com/Dreamacro/clash/dns"
-	"github.com/Dreamacro/clash/listener"
-	authStore "github.com/Dreamacro/clash/listener/auth"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/tunnel"
+	"clash-foss/adapter"
+	"clash-foss/adapter/outboundgroup"
+	"clash-foss/component/auth"
+	"clash-foss/component/dialer"
+	"clash-foss/component/iface"
+	"clash-foss/component/profile"
+	"clash-foss/component/profile/cachefile"
+	"clash-foss/component/resolver"
+	"clash-foss/component/trie"
+	"clash-foss/config"
+	C "clash-foss/constant"
+	"clash-foss/constant/provider"
+	"clash-foss/dns"
+	"clash-foss/listener"
+	authStore "clash-foss/listener/auth"
+	"clash-foss/log"
+	"clash-foss/tunnel"
 )
 
 var mux sync.Mutex

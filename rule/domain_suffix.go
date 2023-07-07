@@ -1,9 +1,11 @@
+//go:build foss
+
 package rules
 
 import (
 	"strings"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type DomainSuffix struct {

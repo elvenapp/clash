@@ -1,3 +1,5 @@
+//go:build foss
+
 package obfs
 
 import (
@@ -5,7 +7,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/Dreamacro/clash/transport/vmess"
+	"clash-foss/transport/vmess"
 )
 
 // Option is options of websocket obfs

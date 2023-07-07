@@ -1,3 +1,5 @@
+//go:build foss
+
 package fakeip
 
 import (
@@ -6,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Dreamacro/clash/common/cache"
-	"github.com/Dreamacro/clash/component/profile/cachefile"
-	"github.com/Dreamacro/clash/component/trie"
+	"clash-foss/common/cache"
+	"clash-foss/component/profile/cachefile"
+	"clash-foss/component/trie"
 )
 
 type store interface {

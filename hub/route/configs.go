@@ -1,16 +1,18 @@
+//go:build foss
+
 package route
 
 import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/Dreamacro/clash/component/resolver"
-	"github.com/Dreamacro/clash/config"
-	"github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/hub/executor"
-	P "github.com/Dreamacro/clash/listener"
-	"github.com/Dreamacro/clash/log"
-	"github.com/Dreamacro/clash/tunnel"
+	"clash-foss/component/resolver"
+	"clash-foss/config"
+	"clash-foss/constant"
+	"clash-foss/hub/executor"
+	P "clash-foss/listener"
+	"clash-foss/log"
+	"clash-foss/tunnel"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"

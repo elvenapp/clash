@@ -1,7 +1,9 @@
+//go:build foss
+
 package rules
 
 import (
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type Match struct {

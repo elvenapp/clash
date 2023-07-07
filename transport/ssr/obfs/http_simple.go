@@ -1,3 +1,5 @@
+//go:build foss
+
 package obfs
 
 import (
@@ -9,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 func init() {

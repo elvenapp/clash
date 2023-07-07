@@ -1,3 +1,5 @@
+//go:build foss
+
 package core
 
 import (
@@ -7,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowaead"
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowstream"
+	"clash-foss/transport/shadowsocks/shadowaead"
+	"clash-foss/transport/shadowsocks/shadowstream"
 )
 
 type Cipher interface {

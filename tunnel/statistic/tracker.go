@@ -1,10 +1,12 @@
+//go:build foss
+
 package statistic
 
 import (
 	"net"
 	"time"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 
 	"github.com/gofrs/uuid/v5"
 	"go.uber.org/atomic"

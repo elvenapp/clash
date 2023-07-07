@@ -1,11 +1,13 @@
+//go:build foss
+
 package provider
 
 import (
 	"context"
 	"time"
 
-	"github.com/Dreamacro/clash/common/batch"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/common/batch"
+	C "clash-foss/constant"
 
 	"github.com/samber/lo"
 	"go.uber.org/atomic"

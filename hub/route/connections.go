@@ -1,3 +1,5 @@
+//go:build foss
+
 package route
 
 import (
@@ -6,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Dreamacro/clash/tunnel/statistic"
+	"clash-foss/tunnel/statistic"
 
 	"github.com/Dreamacro/protobytes"
 	"github.com/go-chi/chi/v5"

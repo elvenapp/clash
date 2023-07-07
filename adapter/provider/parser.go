@@ -1,3 +1,5 @@
+//go:build foss
+
 package provider
 
 import (
@@ -5,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Dreamacro/clash/common/structure"
-	C "github.com/Dreamacro/clash/constant"
-	types "github.com/Dreamacro/clash/constant/provider"
+	"clash-foss/common/structure"
+	C "clash-foss/constant"
+	types "clash-foss/constant/provider"
 )
 
 var (

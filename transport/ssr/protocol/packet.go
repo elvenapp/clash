@@ -1,9 +1,11 @@
+//go:build foss
+
 package protocol
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 type PacketConn struct {

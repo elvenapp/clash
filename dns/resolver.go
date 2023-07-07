@@ -1,3 +1,5 @@
+//go:build foss
+
 package dns
 
 import (
@@ -9,11 +11,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Dreamacro/clash/common/cache"
-	"github.com/Dreamacro/clash/component/fakeip"
-	"github.com/Dreamacro/clash/component/resolver"
-	"github.com/Dreamacro/clash/component/trie"
-	C "github.com/Dreamacro/clash/constant"
+	"clash-foss/common/cache"
+	"clash-foss/component/fakeip"
+	"clash-foss/component/resolver"
+	"clash-foss/component/trie"
+	C "clash-foss/constant"
 
 	D "github.com/miekg/dns"
 	"golang.org/x/sync/singleflight"

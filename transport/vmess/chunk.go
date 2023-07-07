@@ -1,3 +1,5 @@
+//go:build foss
+
 package vmess
 
 import (
@@ -5,7 +7,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 const (

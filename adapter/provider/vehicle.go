@@ -1,3 +1,5 @@
+//go:build foss
+
 package provider
 
 import (
@@ -9,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	types "github.com/Dreamacro/clash/constant/provider"
+	"clash-foss/component/dialer"
+	types "clash-foss/constant/provider"
 )
 
 type FileVehicle struct {

@@ -1,11 +1,13 @@
+//go:build foss
+
 package tproxy
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/adapter/inbound"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/adapter/inbound"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
 )
 
 type Listener struct {

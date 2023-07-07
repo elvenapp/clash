@@ -1,3 +1,5 @@
+//go:build foss
+
 package trie
 
 // Node is the trie's node

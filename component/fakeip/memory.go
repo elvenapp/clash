@@ -1,9 +1,11 @@
+//go:build foss
+
 package fakeip
 
 import (
 	"net"
 
-	"github.com/Dreamacro/clash/common/cache"
+	"clash-foss/common/cache"
 )
 
 type memoryStore struct {

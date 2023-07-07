@@ -1,3 +1,5 @@
+//go:build foss
+
 package outbound
 
 import (
@@ -9,9 +11,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/component/dialer"
+	C "clash-foss/constant"
+	"clash-foss/transport/socks5"
 )
 
 type Socks5 struct {

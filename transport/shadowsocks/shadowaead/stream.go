@@ -1,3 +1,5 @@
+//go:build foss
+
 package shadowaead
 
 import (
@@ -7,7 +9,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 )
 
 const (

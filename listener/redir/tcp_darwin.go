@@ -1,3 +1,5 @@
+//go:build foss
+
 package redir
 
 import (
@@ -5,7 +7,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/Dreamacro/clash/transport/socks5"
+	"clash-foss/transport/socks5"
 )
 
 func parserPacket(c net.Conn) (socks5.Addr, error) {

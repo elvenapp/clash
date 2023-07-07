@@ -1,3 +1,5 @@
+//go:build foss
+
 package outbound
 
 import (
@@ -6,13 +8,13 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/shadowsocks/core"
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowaead"
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowstream"
-	"github.com/Dreamacro/clash/transport/ssr/obfs"
-	"github.com/Dreamacro/clash/transport/ssr/protocol"
+	"clash-foss/component/dialer"
+	C "clash-foss/constant"
+	"clash-foss/transport/shadowsocks/core"
+	"clash-foss/transport/shadowsocks/shadowaead"
+	"clash-foss/transport/shadowsocks/shadowstream"
+	"clash-foss/transport/ssr/obfs"
+	"clash-foss/transport/ssr/protocol"
 )
 
 type ShadowSocksR struct {

@@ -1,3 +1,5 @@
+//go:build foss
+
 package obfs
 
 import (
@@ -7,7 +9,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/Dreamacro/clash/common/pool"
+	"clash-foss/common/pool"
 
 	"github.com/Dreamacro/protobytes"
 )

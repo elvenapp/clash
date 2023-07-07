@@ -1,10 +1,12 @@
+//go:build foss
+
 package snell
 
 import (
 	"crypto/aes"
 	"crypto/cipher"
 
-	"github.com/Dreamacro/clash/transport/shadowsocks/shadowaead"
+	"clash-foss/transport/shadowsocks/shadowaead"
 
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/chacha20poly1305"

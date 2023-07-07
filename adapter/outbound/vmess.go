@@ -1,3 +1,5 @@
+//go:build foss
+
 package outbound
 
 import (
@@ -10,12 +12,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Dreamacro/clash/component/dialer"
-	"github.com/Dreamacro/clash/component/resolver"
-	C "github.com/Dreamacro/clash/constant"
-	"github.com/Dreamacro/clash/transport/gun"
-	"github.com/Dreamacro/clash/transport/socks5"
-	"github.com/Dreamacro/clash/transport/vmess"
+	"clash-foss/component/dialer"
+	"clash-foss/component/resolver"
+	C "clash-foss/constant"
+	"clash-foss/transport/gun"
+	"clash-foss/transport/socks5"
+	"clash-foss/transport/vmess"
 
 	"golang.org/x/net/http2"
 )

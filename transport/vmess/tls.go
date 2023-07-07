@@ -1,3 +1,5 @@
+//go:build foss
+
 package vmess
 
 import (
@@ -5,7 +7,7 @@ import (
 	"crypto/tls"
 	"net"
 
-	C "github.com/Dreamacro/clash/constant"
+	C "clash-foss/constant"
 )
 
 type TLSConfig struct {

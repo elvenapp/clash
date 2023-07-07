@@ -1,3 +1,5 @@
+//go:build foss
+
 package pool
 
 // Inspired by https://github.com/xtaci/smux/blob/master/alloc.go
