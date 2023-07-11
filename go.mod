@@ -1,4 +1,4 @@
-module github.com/Dreamacro/clash
+module clash-foss
 
 go 1.20
 
