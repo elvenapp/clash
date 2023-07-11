@@ -1,4 +1,4 @@
-module clash-foss
+module github.com/elvenapp/clash
 
 go 1.20
 
