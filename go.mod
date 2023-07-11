@@ -1,4 +1,4 @@
-module github.com/elvenapp/clash
+module github.com/Dreamacro/clash
 
 go 1.20
 
